@@ -953,6 +953,10 @@ a,
     color: red;
 }
 
+.wishlist-btn.added i {
+    color: red;
+}
+
 .compare-btn {
     position: absolute;
     top: 44px;
@@ -974,6 +978,10 @@ a,
 }
 
 .compare-btn:hover i {
+    color: white;
+}
+
+.compare-btn.added i {
     color: white;
 }
 
@@ -1041,7 +1049,7 @@ div.card.card-body.mb-4 {
     margin-right: 10px;
 }
 
-.fs-4.fw-bold.mb-2 p {
+.discountedPrice {
     color: red;
 }
 
@@ -1062,6 +1070,14 @@ button.btn.btn-secondary {
 
 .quantity-icons {
     color: #000;
+}
+
+.compare-btn-product.added i {
+    color: var(--blue);
+}
+
+.wishlist-btn-product.added i {
+    color: red;
 }
 
 /* shop */

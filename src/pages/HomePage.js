@@ -1,7 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
 import PopularProductList from "../components/PopularProductList";
-import NoveltiesProductList from "../components/NoveltiesProductList";
-import BestProductList from "../components/BestProductList";
 
 const HomePage = ({ popularProducts, noveltiesProducts, bestProducts }) => {
     const sliderContentRef = useRef(null);
@@ -39,6 +37,17 @@ const HomePage = ({ popularProducts, noveltiesProducts, bestProducts }) => {
             });
         }
     }, [currentSlide]);
+
+    const getCategoryProducts = () => {
+        switch (activeCategory) {
+            case "novelties":
+                return noveltiesProducts;
+            case "best":
+                return bestProducts;
+            default:
+                return popularProducts;
+        }
+    };
 
     return (
         <div className="content-container">
@@ -94,19 +103,19 @@ const HomePage = ({ popularProducts, noveltiesProducts, bestProducts }) => {
             <div className="popular-products-container">
                 <div className="popular-products">
                     <div className="popular-products-type">
-                    <button 
+                        <button
                             onClick={() => setActiveCategory("popular")}
                             className={activeCategory === "popular" ? "active" : ""}
                         >
                             Хіти продажу
                         </button>
-                        <button 
+                        <button
                             onClick={() => setActiveCategory("novelties")}
                             className={activeCategory === "novelties" ? "active" : ""}
                         >
                             Новинки
                         </button>
-                        <button 
+                        <button
                             onClick={() => setActiveCategory("best")}
                             className={activeCategory === "best" ? "active" : ""}
                         >
@@ -114,9 +123,9 @@ const HomePage = ({ popularProducts, noveltiesProducts, bestProducts }) => {
                         </button>
                     </div>
                     <div className="product-container">
-                        {activeCategory === "popular" && <PopularProductList popularProducts={popularProducts} />}
-                        {activeCategory === "novelties" && <NoveltiesProductList noveltiesProducts={noveltiesProducts} />}
-                        {activeCategory === "best" && <BestProductList bestProducts={bestProducts} />}
+                        <PopularProductList
+                            products={getCategoryProducts()}
+                        />
                     </div>
                 </div>
             </div>

@@ -15,6 +15,7 @@ import ContactPage from './pages/Contacts'
 import ShippingPaymentPage from './pages/Shipping'
 import ReturnPolicyPage from './pages/ReturnPage'
 import CheckoutPage from './pages/CheckoutPage'
+import OrderSuccessPage from './pages/OrderSuccessPage'
 
 import PrivateRoute from "./utils/PrivateRoute"
 import { AuthProvider } from './context/AuthContext'
@@ -92,6 +93,7 @@ function App() {
             <Route path="/shipping" element={<ShippingPaymentPage/>} />
             <Route path="/return" element={<ReturnPolicyPage/>} />
             <Route path="/checkout" element={<CheckoutPage/>} />
+            <Route path="/order-success" element={<OrderSuccessPage />} />
           </Route>
         </Routes>
       </AuthProvider>

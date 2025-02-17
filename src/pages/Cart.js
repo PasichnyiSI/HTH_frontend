@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Container, Typography, Button, List, ListItem, ListItemText, IconButton, Grid } from "@mui/material";
 import { Delete } from "@mui/icons-material";
+import { fetchCart, removeItem } from "../utils/cartService";
 import useAxios from "../utils/useAxios";
 
 const Cart = () => {
@@ -11,45 +12,8 @@ const Cart = () => {
     const axiosInstance = useAxios();
 
     useEffect(() => {
-      const fetchCart = async () => {
-          try {
-              const response = await axiosInstance.get("http://127.0.0.1:8000/cart/cart/");
-              console.log(response.data);
-              if (response.data.length > 0 && response.data[0].items) {
-                  setCart(response.data[0]);
-              } else {
-                  setError("Ваш кошик порожній");
-              }
-          } catch (err) {
-              setError("Не вдалося завантажити корзину.");
-              console.error(err);
-          } finally {
-              setLoading(false);
-          }
-      };
-
-      fetchCart();
+      fetchCart(axiosInstance, setCart, setLoading, setError);
   }, [axiosInstance]);  // Додаємо axiosInstance до масиву залежностей
-
-  const removeItem = async (productId, sizeId = null) => {
-    console.log("Отримані значення для видалення:", { productId, sizeId });
-  
-    if (!productId) {
-      alert("Помилка: productId не знайдено!");
-      return;
-    }
-  
-    try {
-      const response = await axiosInstance.post("/cart/cart/remove_item/", {
-        product_id: productId,
-        size_id: sizeId
-      });
-  
-      console.log("Успішно видалено:", response.data);
-    } catch (error) {
-      console.error("Помилка при видаленні товару з кошика", error);
-    }
-  };
    
 
     if (loading) {
@@ -90,7 +54,7 @@ const Cart = () => {
                                 <Typography variant="body1">Кількість: {item.quantity}</Typography>
                             </Grid>
                             <Grid item xs={2}>
-                                <IconButton onClick={() => removeItem(item.product, item.size)} color="error">
+                                <IconButton onClick={() => removeItem(axiosInstance, item.product, item.size)} color="error">
                                     <Delete />
                                 </IconButton>
                             </Grid>

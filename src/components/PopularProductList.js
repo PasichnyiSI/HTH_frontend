@@ -1,17 +1,36 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 import ProductRating from "./ProductRating";
+import { getWishlistFromStorage, handleWishlistToggle } from "../utils/wishlistService";
+import { getComparisonlistFromStorage, handleComparisonlistToggle } from "../utils/comparisonService";
+import useAxios from "../utils/useAxios";
 
-// Підключаємо стилі Swiper (без зайвих змін вашого дизайну)
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 
-function PopularProductList({ popularProducts }) {
-  if (!popularProducts || popularProducts.length === 0) {
-    return <p>No popular products available.</p>;
+function PopularProductList({ products }) {
+  const axiosInstance = useAxios();
+  const [wishlist, setWishlist] = useState(getWishlistFromStorage());
+  const [comparisonlist, setComparisonlist] = useState(getComparisonlistFromStorage());
+
+  useEffect(() => {
+    const handleStorageChange = () => {
+        setWishlist(getWishlistFromStorage()); // Оновлюємо локальний state
+        setComparisonlist(getComparisonlistFromStorage()); 
+    };
+
+    window.addEventListener("storage", handleStorageChange); // Слідкуємо за змінами localStorage
+
+    return () => {
+        window.removeEventListener("storage", handleStorageChange); // Прибираємо слухача при розмонтуванні
+    };
+}, []);
+
+  if (!products || products.length === 0) {
+    return <p>No products available.</p>;
   }
 
   return (
@@ -21,8 +40,8 @@ function PopularProductList({ popularProducts }) {
         spaceBetween={10}
         slidesPerView={4}
         navigation
-        loop={false} // Вимикаємо безкінечний цикл
-        allowTouchMove={true} // Дозволяємо ручне гортання
+        loop={false}
+        allowTouchMove={true}
         breakpoints={{
           1300: { slidesPerView: 4 },
           1024: { slidesPerView: 3 },
@@ -38,9 +57,11 @@ function PopularProductList({ popularProducts }) {
         }}
         style={{ width: "85%" }}
       >
-        {popularProducts.map((product) => {
+        {products.map((product) => {
           const hasDiscount = product.discount > 0;
           const discountedPrice = Math.round(product.price_per_sq_m * (1 - product.discount / 100));
+          const isProductInWishlist = wishlist.some(item => item.id === product.id);
+          const isProductInComparisonlist = comparisonlist.some(item => item.id === product.id);
 
           return (
             <SwiperSlide key={product.id}>
@@ -48,8 +69,26 @@ function PopularProductList({ popularProducts }) {
                 <div className="wrapper">
                   <div className="product-image">
                     {hasDiscount && <p className="discount-badge">-{Math.round(product.discount)}%</p>}
-                    <a href="/" className="wishlist-btn"><i className="fa-regular fa-heart"></i></a>
-                    <a href="/" className="compare-btn"><i class="fa-solid fa-scale-balanced"></i></a>
+                    <a
+                      href="/"
+                      className={`wishlist-btn ${isProductInWishlist ? "added" : ""}`}
+                      onClick={(e) => {
+                        e.preventDefault(); // Запобігаємо переходу по лінку
+                        handleWishlistToggle(axiosInstance, product, wishlist, setWishlist);
+                      }}
+                    >
+                      <i className="fa-solid fa-heart"></i>
+                    </a>
+                    <a
+                      href="/"
+                      className={`compare-btn ${isProductInComparisonlist ? "added" : ""}`}
+                      onClick={(e) => {
+                        e.preventDefault(); // Запобігаємо переходу по лінку
+                        handleComparisonlistToggle(axiosInstance, product, comparisonlist, setComparisonlist);
+                      }}
+                    >
+                      <i className="fa-solid fa-scale-balanced"></i>
+                    </a>
                     <div className="color-block-img"></div>
                     <img src={product.image} alt={product.name} />
                   </div>

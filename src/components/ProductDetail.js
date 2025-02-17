@@ -1,22 +1,38 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import useAxios from "../utils/useAxios";
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ProductRating from "./ProductRating";
+import { addToCart } from "../utils/cartService"
+import { getWishlistFromStorage, handleWishlistToggle } from "../utils/wishlistService";
+import { getComparisonlistFromStorage, handleComparisonlistToggle } from "../utils/comparisonService";
 
 function ProductDetail({ product, user }) {
   const [selectedSize, setSelectedSize] = useState("default");
   const [price, setPrice] = useState(parseFloat(product.price_per_sq_m));
   const [originalPrice, setOriginalPrice] = useState(parseFloat(product.price_per_sq_m));
   const [quantity, setQuantity] = useState(1);
+  const [wishlist, setWishlist] = useState(getWishlistFromStorage());
+  const [comparisonlist, setComparisonlist] = useState(getComparisonlistFromStorage());
   const axiosInstance = useAxios(); // Використовуємо axios з токеном
 
-  if (!product) {
-    return <p>Товар відсутній.</p>;
-  }
+  useEffect(() => {
+    const handleStorageChange = () => {
+        setWishlist(getWishlistFromStorage()); // Оновлюємо локальний state
+        setComparisonlist(getComparisonlistFromStorage()); 
+    };
+
+    window.addEventListener("storage", handleStorageChange); // Слідкуємо за змінами localStorage
+
+    return () => {
+        window.removeEventListener("storage", handleStorageChange); // Прибираємо слухача при розмонтуванні
+    };
+}, []);
 
   const hasDiscount = product.discount && parseFloat(product.discount) > 0;
   const discountedPrice = hasDiscount ? (price - (parseFloat(product.discount) / 100) * price) : price;
+  const isProductInWishlist = wishlist.some(item => item.id === product.id);
+  const isProductInComparisonlist = comparisonlist.some(item => item.id === product.id);
 
   const handleSizeChange = (event) => {
     const sizeId = event.target.value;
@@ -40,22 +56,9 @@ function ProductDetail({ product, user }) {
     setQuantity(newQuantity);
   };
 
-  const addToCart = async () => {
-    try {
-      const response = await axiosInstance.post("http://127.0.0.1:8000/cart/cart/add_item/", {
-        product_id: product.id,
-        size_id: selectedSize.id,  // Тут вже збережений коректний id
-        size_name: selectedSize.name,  // Ім'я розміру передається окремо
-        quantity: quantity,
-      });
-
-      console.log("Товар додано до кошика:", response.data);
-      alert("Товар успішно додано до кошика!");
-    } catch (error) {
-      console.error("Помилка при додаванні в кошик:", error.response ? error.response.data : error);
-      alert(`Не вдалося додати товар до кошика: ${error.response?.data?.detail || "Невідома помилка"}`);
-    }
-  };
+  if (!product) {
+    return <p>Товар відсутній.</p>;
+  }
 
   return (
     <div className="product-page-container">
@@ -73,11 +76,11 @@ function ProductDetail({ product, user }) {
                 <div className="fs-4 fw-bold mb-2">
                   {hasDiscount ? (
                     <>
-                      <s>{Math.round(originalPrice)} грн</s>
-                      <p>{Math.round(discountedPrice)} грн</p>
+                      <s className="originalPrice">{Math.round(originalPrice)} грн</s>
+                      <p className="discountedPrice">{Math.round(discountedPrice)} грн</p>
                     </>
                   ) : (
-                    <p>{Math.round(price)} грн</p>
+                    <p className="price">{Math.round(price)} грн</p>
                   )}
                 </div>
                 <ProductRating productSlug={product.slug} user={user} />
@@ -93,10 +96,10 @@ function ProductDetail({ product, user }) {
                   value={selectedSize.id || "default"}
                   onChange={handleSizeChange}
                 >
-                  <option value="default">1 м² - {parseFloat(product.price_per_sq_m)} грн</option>
+                  <option value="default">1 м²</option>
                   {product.sizes.map((sizeOption) => (
                     <option key={sizeOption.size.id} value={sizeOption.size.id}>
-                      {sizeOption.size.name} - {parseFloat(sizeOption.price)} грн
+                      {sizeOption.size.name}
                     </option>
                   ))}
                 </select>
@@ -122,13 +125,23 @@ function ProductDetail({ product, user }) {
                     </div>
                   </div>
                   <div className="mt-2 d-flex flex-row flex-nowrap align-items-center">
-                    <button className="btn btn-primary text-uppercase text-nowrap me-2">
+                    <button className={`compare-btn-product btn btn-primary text-uppercase text-nowrap me-2 ${isProductInComparisonlist ? "added" : ""}`}
+                      onClick={(e) => {
+                        e.preventDefault(); // Запобігаємо переходу по лінку
+                        handleComparisonlistToggle(axiosInstance, product, comparisonlist, setComparisonlist);
+                      }}
+                    >
                       <i className="fa-solid fa-scale-balanced"></i>
                     </button>
-                    <button className="btn btn-primary text-uppercase text-nowrap me-2">
+                    <button className={`wishlist-btn-product btn btn-primary text-uppercase text-nowrap me-2 ${isProductInWishlist ? "added" : ""}`}
+                      onClick={(e) => {
+                        e.preventDefault(); // Запобігаємо переходу по лінку
+                        handleWishlistToggle(axiosInstance, product, wishlist, setWishlist);
+                      }}
+                    >
                       <i className="fa-solid fa-heart"></i>
                     </button>
-                    <button className="btn btn-primary text-uppercase text-nowrap me-2" onClick={addToCart}>
+                    <button className="btn btn-primary text-uppercase text-nowrap me-2" onClick={() => addToCart(axiosInstance, product, selectedSize, quantity, discountedPrice)}>
                       В кошик
                     </button>
                   </div>

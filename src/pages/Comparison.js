@@ -1,40 +1,57 @@
-import React from "react";
-import { Container, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button } from "@mui/material";
+import React, { useEffect, useState } from "react";
+import { Container, Typography, Card, CardContent, CardMedia, Grid, ListItem, IconButton } from "@mui/material";
+import { Delete } from "@mui/icons-material";
+import { fetchComparisonlist, removeItem } from "../utils/comparisonService";
+import useAxios from "../utils/useAxios";
 
 const ComparisonPage = () => {
+    const [comparisonlist, setComparisonlist] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    const axiosInstance = useAxios();
+
+    useEffect(() => {
+            fetchComparisonlist(axiosInstance, setComparisonlist, setError, setLoading);  // Передаємо axiosInstance
+        }, [axiosInstance]);  // Додаємо axiosInstance до масиву залежностей
+    
+    if (loading) {
+        return <Typography variant="h6">Завантаження...</Typography>;
+    }
+
+    if (error) {
+        return <Typography variant="h6" color="error">{error}</Typography>;
+    }
+
+    if (!comparisonlist || !comparisonlist.items || comparisonlist.items.length === 0) {
+        return (
+            <Container>
+                <Typography variant="h6">Ваш список порівнянь порожній</Typography>
+            </Container>
+        );
+    }
 
     return (
-        <Container maxWidth="lg">
-            <Typography variant="h4" sx={{ mt: 4, mb: 2, textAlign: "center" }}>Порівняння товарів</Typography>
-                <TableContainer component={Paper}>
-                    <Table>
-                        <TableHead>
-                            <TableRow>
-                                <TableCell>Зображення</TableCell>
-                                <TableCell>Назва</TableCell>
-                                <TableCell>Ціна</TableCell>
-                                <TableCell>Рейтинг</TableCell>
-                                <TableCell>Категорія</TableCell>
-                                <TableCell>Дії</TableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                                <TableRow key="">
-                                    <TableCell>
-                                        <img src="" alt="" width="80" />
-                                    </TableCell>
-                                    <TableCell>item.name</TableCell>
-                                    <TableCell>item.price грн</TableCell>
-                                    <TableCell>item.rating ★</TableCell>
-                                    <TableCell>item.category</TableCell>
-                                    <TableCell>
-                                        <Button variant="outlined" color="secondary" >Видалити</Button>
-                                    </TableCell>
-                                </TableRow>
-                        </TableBody>
-                    </Table>
-                </TableContainer>
-                <Typography sx={{ textAlign: "center", mt: 2 }}>Немає товарів для порівняння.</Typography>
+        <Container maxWidth="md">
+            <Typography variant="h4" sx={{ mt: 4, mb: 2 }}>Список порівнянь</Typography>
+            {comparisonlist.items.map((item) => (
+                <ListItem key={item.id}>
+                    <Grid container spacing={2}>
+                        <Grid item xs={12} sm={6} md={4}>
+                            <Card>
+                                <CardMedia component="img" height="140" image={item.product_image} alt={item.product_name} />
+                                <CardContent>
+                                    <Typography variant="h6">{item.product_name}</Typography>
+                                    <Typography color="textSecondary">{item.product_price} грн</Typography>
+                                </CardContent>
+                                <IconButton onClick={() => removeItem(axiosInstance, item.product)} color="error">
+                                    <Delete />
+                                </IconButton>
+                            </Card>
+                        </Grid>
+                    </Grid>
+                </ListItem>
+            ))}
         </Container>
     );
 };
