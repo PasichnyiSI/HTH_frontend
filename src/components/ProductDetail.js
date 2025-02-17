@@ -2,10 +2,9 @@ import React, { useState } from "react";
 import useAxios from "../utils/useAxios";
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import Alert from '@mui/material/Alert';
+import ProductRating from "./ProductRating";
 
-
-function ProductDetail({ product }) {
+function ProductDetail({ product, user }) {
   const [selectedSize, setSelectedSize] = useState("default");
   const [price, setPrice] = useState(parseFloat(product.price_per_sq_m));
   const [originalPrice, setOriginalPrice] = useState(parseFloat(product.price_per_sq_m));
@@ -21,9 +20,9 @@ function ProductDetail({ product }) {
 
   const handleSizeChange = (event) => {
     const sizeId = event.target.value;
-    
+
     if (sizeId === "default") {
-      setSelectedSize({ id: null, name: "1 кв. м." });
+      setSelectedSize({ id: null, name: "1 м²" });
       setPrice(parseFloat(product.price_per_sq_m));
       setOriginalPrice(parseFloat(product.price_per_sq_m));
     } else {
@@ -35,7 +34,6 @@ function ProductDetail({ product }) {
       }
     }
   };
-  
 
   const handleQuantityChange = (value) => {
     const newQuantity = Math.max(1, quantity + value);
@@ -50,7 +48,7 @@ function ProductDetail({ product }) {
         size_name: selectedSize.name,  // Ім'я розміру передається окремо
         quantity: quantity,
       });
-      
+
       console.log("Товар додано до кошика:", response.data);
       alert("Товар успішно додано до кошика!");
     } catch (error) {
@@ -58,7 +56,6 @@ function ProductDetail({ product }) {
       alert(`Не вдалося додати товар до кошика: ${error.response?.data?.detail || "Невідома помилка"}`);
     }
   };
-  
 
   return (
     <div className="product-page-container">
@@ -83,6 +80,7 @@ function ProductDetail({ product }) {
                     <p>{Math.round(price)} грн</p>
                   )}
                 </div>
+                <ProductRating productSlug={product.slug} user={user} />
               </div>
 
               <div className="mt-2">
@@ -95,7 +93,7 @@ function ProductDetail({ product }) {
                   value={selectedSize.id || "default"}
                   onChange={handleSizeChange}
                 >
-                  <option value="default">1 кв. м. - {parseFloat(product.price_per_sq_m)} грн</option>
+                  <option value="default">1 м² - {parseFloat(product.price_per_sq_m)} грн</option>
                   {product.sizes.map((sizeOption) => (
                     <option key={sizeOption.size.id} value={sizeOption.size.id}>
                       {sizeOption.size.name} - {parseFloat(sizeOption.price)} грн

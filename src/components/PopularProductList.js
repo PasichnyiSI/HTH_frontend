@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
+import ProductRating from "./ProductRating";
 
 // Підключаємо стилі Swiper (без зайвих змін вашого дизайну)
 import "swiper/css";
@@ -54,6 +55,9 @@ function PopularProductList({ popularProducts }) {
                   </div>
                   <div className="infoProd">
                     <span>{product.name}</span>
+                    <div className="rating-prod">
+                      <ProductRating productSlug={product.slug} />
+                    </div>
                     <div className="price">
                       {hasDiscount ? (
                         <>

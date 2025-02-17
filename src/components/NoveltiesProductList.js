@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import ProductRating from "./ProductRating";
 
 function NoveltiesProductList({ noveltiesProducts }) {
   if (!noveltiesProducts || noveltiesProducts.length === 0) {
@@ -24,6 +25,9 @@ function NoveltiesProductList({ noveltiesProducts }) {
                 </div>
                 <div className="infoProd">
                   <span>{product.name}</span>
+                  <div className="rating-prod">
+                   <ProductRating productSlug={product.slug} />
+                  </div>
                     <div className="price">
                       {hasDiscount ? (
                         <>

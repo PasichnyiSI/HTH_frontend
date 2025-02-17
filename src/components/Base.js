@@ -26,7 +26,7 @@ const Base = ({ categories, categoryProduct }) => {
       if (authTokens) {
         const fetchData = async () => {
           try {
-            const response = await api.get("/test/");
+            const response = await api.get("users/test/");
             setRes(response.data.response);
           } catch (error) {
             console.log(error);

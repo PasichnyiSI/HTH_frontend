@@ -3,7 +3,7 @@ import useAxios from "../utils/useAxios";
 import { jwtDecode } from "jwt-decode";
 import AuthContext from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
-import { Container, Typography, Card, CardContent, Button, Avatar, Grid } from "@mui/material";
+import { Container, Typography, Card, CardContent, Button, Avatar, Grid, Alert } from "@mui/material";
 
 function Dashboard() {
 
@@ -57,6 +57,7 @@ function Dashboard() {
         <Avatar src={user.avatar} alt={user.name} sx={{ width: 80, height: 80, mx: "auto", mb: 2 }} />
         <Typography variant="h5">{user.username}</Typography>
         <Typography color="textSecondary">{user.email}</Typography>
+        <Alert color='success' variant="filled">{res}</Alert>
         <Button variant="contained" color="primary" sx={{ mt: 2 }}>Редагувати профіль</Button>
       </Card>
       <Typography variant="h6" sx={{ mt: 4, mb: 2 }}>Історія замовлень</Typography>

@@ -69,7 +69,7 @@ function App() {
     fetch("http://127.0.0.1:8000/api/router/categories/")
       .then((response) => response.json())
       .then((data) => setCategories(data))
-      .catch((error) => console.log("Error fetching categories:", error));
+      .catch((error) => console.log("Помилка отримання категорій:", error));
   }, []);
 
   return (
