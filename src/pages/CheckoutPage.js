@@ -12,13 +12,14 @@ import useAxios from "../utils/useAxios";
 import AuthContext from "../context/AuthContext";
 import { fetchCart, clearCart } from "../utils/cartService";
 
-const steps = ['Дані покупця', 'Payment details', 'Review your order'];
+const steps = ['Дані покупця', 'Оплата', 'Перевірка'];
 
 const CheckoutPage = () => {
     const [cart, setCart] = useState(null);
-    const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [loading, setLoading] = useState(true);
     const [totalPrice, setTotalPrice] = useState(0);
+
     const [checkoutData, setCheckoutData] = useState({
         first_name: "",
         last_name: "",
@@ -30,9 +31,13 @@ const CheckoutPage = () => {
         payment_method: "card",
         card_number: "",
         expiration_date: "",
+        cvv_code: "",
     });
 
+    const [errors, setErrors] = useState({});
+
     const [activeStep, setActiveStep] = useState(0);
+    const [isNextDisabled, setIsNextDisabled] = useState(true);
 
     const axiosInstance = useAxios();
     const navigate = useNavigate();
@@ -51,13 +56,60 @@ const CheckoutPage = () => {
         }
     }, [cart]);
 
-    // Функція для оновлення стану checkoutData при введенні користувачем даних
+    const validateInputs = (data = checkoutData) => {
+      let newErrors = {};
+  
+      if (!data.first_name.trim()) newErrors.first_name = "Ім'я є обов'язковим.";
+      if (!data.last_name.trim()) newErrors.last_name = "Прізвище є обов'язковим.";
+      if (!data.email || !/\S+@\S+\.\S+/.test(data.email)) newErrors.email = "Некоректний email.";
+      if (!data.address.trim()) newErrors.address = "Адреса є обов'язковою.";
+      if (!data.city.trim()) newErrors.city = "Місто є обов'язковим.";
+      if (!data.country.trim()) newErrors.country = "Країна є обов'язковою.";
+      if (!data.postal_code.trim() || data.postal_code.length < 5) newErrors.postal_code = "Некоректний поштовий індекс.";
+  
+      if (activeStep === 1 && data.payment_method === "card") {
+          if (!data.card_number.match(/^\d{16}$/)) {
+              newErrors.card_number = "Номер картки має містити 16 цифр.";
+          }
+          if (!data.expiration_date.match(/^\d{2}\/\d{2}$/)) {
+              newErrors.expiration_date = "Термін дії має бути у форматі MM/YY.";
+          }
+          if (!data.cvv_code.match(/^\d{3}$/)) {
+            newErrors.expiration_date = "CVV має містити 3 цифри.";
+        }
+      }
+  
+      setErrors(newErrors);
+      return Object.keys(newErrors).length === 0;
+  };
+  
+    useEffect(() => {
+      setIsNextDisabled(!validateInputs());
+    }, [checkoutData, activeStep]);
+  
+
     const handleChange = (event) => {
-        setCheckoutData({ ...checkoutData, [event.target.name]: event.target.value });
+      const { name, value } = event.target;
+      const updatedData = { ...checkoutData, [name]: value };
+  
+      setCheckoutData(updatedData);
+      setIsNextDisabled(!validateInputs(updatedData));
+  };
+  
+
+    const handleNext = () => {
+      if (validateInputs(checkoutData)) {
+          setActiveStep((prev) => prev + 1);
+      }
+    };
+
+    const handleBack = () => {
+      setActiveStep((prev) => prev - 1);
     };
 
     // Функція оформлення замовлення
     const handleCheckout = async () => {
+      if (!validateInputs()) return;
         const token = localStorage.getItem('authTokens');
         if (!token) {
           setError('Please log in to proceed.');
@@ -122,25 +174,63 @@ const CheckoutPage = () => {
             return (
               <Grid container spacing={2} mt={3}>
                 <Grid item xs={6}>
-                <TextField fullWidth label="Ім'я" name="first_name" value={checkoutData.first_name} onChange={handleChange} required />
+                  <TextField fullWidth label="Ім'я" 
+                  name="first_name" 
+                  value={checkoutData.first_name} 
+                  onChange={handleChange} required 
+                  error={!!errors.first_name}
+                  helperText={errors.first_name}
+                  />
                 </Grid>
                 <Grid item xs={6}>
-                <TextField fullWidth label="Прізвище" name="last_name" value={checkoutData.last_name} onChange={handleChange} required />
+                  <TextField fullWidth label="Прізвище" 
+                  name="last_name" 
+                  value={checkoutData.last_name} 
+                  onChange={handleChange} required 
+                  error={!!errors.last_name}
+                  helperText={errors.last_name}
+                  />
                 </Grid>
                 <Grid item xs={12}>
-                    <TextField fullWidth label="Email" type="email" name="email" value={checkoutData.email} onChange={handleChange} required />
+                    <TextField fullWidth label="Email" 
+                    type="email" name="email" 
+                    value={checkoutData.email} 
+                    onChange={handleChange} required 
+                    error={!!errors.email}
+                    helperText={errors.email}
+                    />
                 </Grid>
                 <Grid item xs={6}>
-                    <TextField fullWidth label="Адреса" name="address" value={checkoutData.address} onChange={handleChange} required />
+                    <TextField fullWidth label="Адреса" 
+                    name="address" value={checkoutData.address} 
+                    onChange={handleChange} required 
+                    error={!!errors.address}
+                    helperText={errors.address}
+                    />
                 </Grid>
                 <Grid item xs={6}>
-                    <TextField fullWidth label="Місто" name="city" value={checkoutData.city} onChange={handleChange} required />
+                    <TextField fullWidth label="Місто" 
+                    name="city" value={checkoutData.city} 
+                    onChange={handleChange} required 
+                    error={!!errors.city}
+                    helperText={errors.city}
+                    />
                 </Grid>
                 <Grid item xs={6}>
-                    <TextField fullWidth label="Країна" name="country" value={checkoutData.country} onChange={handleChange} required />
+                    <TextField fullWidth label="Країна" 
+                    name="country" value={checkoutData.country} 
+                    onChange={handleChange} required 
+                    error={!!errors.country}
+                    helperText={errors.country}
+                    />
                 </Grid>
                 <Grid item xs={6}>
-                    <TextField fullWidth label="Поштовий індекс" name="postal_code" value={checkoutData.postal_code} onChange={handleChange} required />
+                    <TextField fullWidth label="Поштовий індекс" 
+                    name="postal_code" value={checkoutData.postal_code} 
+                    onChange={handleChange} required 
+                    error={!!errors.postal_code}
+                    helperText={errors.postal_code}
+                    />
                 </Grid>
               </Grid>
             );
@@ -162,11 +252,29 @@ const CheckoutPage = () => {
                     </TextField>
                     {checkoutData.payment_method === "card" && (
                         <>
-                            <Grid item xs={12}>
-                                <TextField fullWidth label="Номер картки" name="card_number" value={checkoutData.card_number} onChange={handleChange} required />
+                            <Grid item xs={12} mt={1}>
+                                <TextField fullWidth label="Номер картки" 
+                                name="card_number" value={checkoutData.card_number} 
+                                onChange={handleChange} required 
+                                error={!!errors.card_number}
+                                helperText={errors.card_number}
+                                />
                             </Grid>
                             <Grid item xs={12}>
-                                <TextField fullWidth label="Дата закінчення" name="expiration_date" value={checkoutData.expiration_date} onChange={handleChange} required />
+                                <TextField fullWidth label="Дата закінчення" 
+                                name="expiration_date" value={checkoutData.expiration_date} 
+                                onChange={handleChange} required 
+                                error={!!errors.expiration_date}
+                                helperText={errors.expiration_date}
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <TextField fullWidth label="CVV код" 
+                                name="cvv_code" value={checkoutData.cvv_code} 
+                                onChange={handleChange} required 
+                                error={!!errors.cvv_code}
+                                helperText={errors.cvv_code}
+                                />
                             </Grid>
                         </>
                     )}
@@ -206,14 +314,6 @@ const CheckoutPage = () => {
         }
       };
     
-      const handleNext = () => {
-        setActiveStep(activeStep + 1);
-      };
-    
-      const handleBack = () => {
-        setActiveStep(activeStep - 1);
-      };
-
     if (loading) {
         return <CircularProgress />;
     }
@@ -254,12 +354,13 @@ const CheckoutPage = () => {
                                 onClick={handleBack}
                                 disabled={activeStep === 0}
                             >
-                                Back
+                                Назад
                             </Button>
                             <Button
                                 variant="contained"
                                 endIcon={<ChevronRightRoundedIcon />}
                                 onClick={activeStep === steps.length - 1 ? handleCheckout : handleNext}
+                                disabled={isNextDisabled}
                             >
                                 {activeStep === steps.length - 1 ? 'Підтвердити замовлення' : 'Далі'}
                             </Button>

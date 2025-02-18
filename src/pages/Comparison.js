@@ -13,7 +13,7 @@ const ComparisonPage = () => {
 
     useEffect(() => {
             fetchComparisonlist(axiosInstance, setComparisonlist, setError, setLoading);  // Передаємо axiosInstance
-        }, [axiosInstance]);  // Додаємо axiosInstance до масиву залежностей
+        }, []);  // Додаємо axiosInstance до масиву залежностей
     
     if (loading) {
         return <Typography variant="h6">Завантаження...</Typography>;

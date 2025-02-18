@@ -15,7 +15,6 @@ import UndoIcon from '@mui/icons-material/Undo';
 import LoginIcon from '@mui/icons-material/Login';
 import LogoutIcon from '@mui/icons-material/Logout';
 
-
 const Base = ({ categories, categoryProduct }) => {
 
     const [res, setRes] = useState("");

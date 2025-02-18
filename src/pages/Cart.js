@@ -13,7 +13,7 @@ const Cart = () => {
 
     useEffect(() => {
       fetchCart(axiosInstance, setCart, setLoading, setError);
-  }, [axiosInstance]);  // Додаємо axiosInstance до масиву залежностей
+  }, []);  // Додаємо axiosInstance до масиву залежностей
    
 
     if (loading) {
