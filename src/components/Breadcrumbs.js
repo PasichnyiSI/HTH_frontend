@@ -45,7 +45,7 @@ const Breadcrumbs = () => {
                 // Якщо це продукт
                 if (pathnames[i - 1] === "products") {
                     try {
-                        const response = await axios.get(`http://hth-backend-tks7.onrender.com/api/router/products/${segment}/`);
+                        const response = await axios.get(`https://hth-backend-tks7.onrender.com/api/router/products/${segment}/`);
                         newNames[segment] = response.data.name;
                     } catch (error) {
                         console.error("Помилка завантаження продукту:", error);
@@ -55,7 +55,7 @@ const Breadcrumbs = () => {
                 // Якщо це категорія
                 if (pathnames[i - 1] === "categories") {
                     try {
-                        const response = await axios.get(`http://hth-backend-tks7.onrender.com/api/router/categories/${segment}/`);
+                        const response = await axios.get(`https://hth-backend-tks7.onrender.com/api/router/categories/${segment}/`);
                         newNames[segment] = response.data.name;
                     } catch (error) {
                         console.error("Помилка завантаження категорії:", error);

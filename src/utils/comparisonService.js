@@ -1,6 +1,6 @@
 export const fetchComparisonlist = async (axiosInstance, setComparisonlist, setError, setLoading) => {
     try {
-        const response = await axiosInstance.get("http://hth-backend-tks7.onrender.com/comparisonlist/comparisonlist/");
+        const response = await axiosInstance.get("https://hth-backend-tks7.onrender.com/comparisonlist/comparisonlist/");
         console.log(response.data);
         if (response.data.length > 0 && response.data[0].items) {
             setComparisonlist(response.data[0]);
@@ -42,7 +42,7 @@ export const removeItem = async (axiosInstance, productId = null) => {
 
 export const addToComparisonlist = async (axiosInstance, product, discountedPrice) => {
     try {
-      const response = await axiosInstance.post("http://hth-backend-tks7.onrender.com/comparisonlist/comparisonlist/add_item/", {
+      const response = await axiosInstance.post("https://hth-backend-tks7.onrender.com/comparisonlist/comparisonlist/add_item/", {
         product_id: product.id,
         price: Math.round(discountedPrice), // Додаємо ціну зі знижкою
       });

@@ -26,7 +26,7 @@ function ProductPage() {
 
     const fetchProduct = async () => {
       try {
-        const response = await fetch(`http://hth-backend-tks7.onrender.com/api/router/products/${slug}/`);
+        const response = await fetch(`https://hth-backend-tks7.onrender.com/api/router/products/${slug}/`);
         if (!response.ok) throw new Error("Failed to fetch product");
         const data = await response.json();
         setProduct(data);
@@ -72,7 +72,7 @@ function ProductPage() {
 
     try {
       await axiosInstance.post(
-        `http://hth-backend-tks7.onrender.com/rating/ratings/${slug}/rate/`,
+        `https://hth-backend-tks7.onrender.com/rating/ratings/${slug}/rate/`,
         formData,
         { headers: { "Content-Type": "multipart/form-data" } }
       );

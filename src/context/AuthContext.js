@@ -27,7 +27,7 @@ export const AuthProvider = ({ children }) => {
     const navigate = useNavigate();
 
     const loginUser = async (email, password) => {
-        const response = await fetch("http://hth-backend-tks7.onrender.com/users/token/", {
+        const response = await fetch("https://hth-backend-tks7.onrender.com/users/token/", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -75,7 +75,7 @@ export const AuthProvider = ({ children }) => {
     
 
     const registerUser = async (email, username, password, password2) => {
-        const response = await fetch("http://hth-backend-tks7.onrender.com/users/register/", {
+        const response = await fetch("https://hth-backend-tks7.onrender.com/users/register/", {
             method: "POST",
             headers: {
                 "Content-Type":"application/json"

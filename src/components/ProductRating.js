@@ -10,7 +10,7 @@ const ProductRating = ({ productSlug }) => {
     const fetchRating = async () => {
       try {
         // Зміни URL на hth-backend-tks7.onrender.com
-        const response = await axios.get(`http://hth-backend-tks7.onrender.com/api/router/products/${productSlug}/`);
+        const response = await axios.get(`https://hth-backend-tks7.onrender.com/api/router/products/${productSlug}/`);
         console.log(response.data);  // Логування відповіді
         setAverageRating(parseFloat(response.data.average_rating) || 0);
         setRatingCount(response.data.rating_count || 0);

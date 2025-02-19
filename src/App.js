@@ -32,7 +32,7 @@ function App() {
 
   // Вибираємо всі продукти по API
   useEffect(() => {
-    fetch("http://hth-backend-tks7.onrender.com/api/router/products/")
+    fetch("https://hth-backend-tks7.onrender.com/api/router/products/")
       .then((response) => response.json())
       .then((data) => setProducts(data))
       .catch((error) => console.log("Error fetching products: ", error));
@@ -41,7 +41,7 @@ function App() {
   // console.log(products);
 
   useEffect(() => {
-    fetch("http://hth-backend-tks7.onrender.com/api/router/popular-products/")
+    fetch("https://hth-backend-tks7.onrender.com/api/router/popular-products/")
       .then((response) => response.json())
       .then((data) => setPopularProducts(data))
       .catch((error) => console.log("Error fetching products: ", error));
@@ -50,7 +50,7 @@ function App() {
   // console.log(popularProducts);
 
   useEffect(() => {
-    fetch("http://hth-backend-tks7.onrender.com/api/router/novelties-products/")
+    fetch("https://hth-backend-tks7.onrender.com/api/router/novelties-products/")
       .then((response) => response.json())
       .then((data) => setNoveltiesProducts(data))
       .catch((error) => console.log("Error fetching products: ", error));
@@ -58,7 +58,7 @@ function App() {
   }, []);
 
   useEffect(() => {
-    fetch("http://hth-backend-tks7.onrender.com/api/router/best-products/")
+    fetch("https://hth-backend-tks7.onrender.com/api/router/best-products/")
       .then((response) => response.json())
       .then((data) => setBestProducts(data))
       .catch((error) => console.log("Error fetching products: ", error));
@@ -67,7 +67,7 @@ function App() {
 
   useEffect(() => {
     // Запит на отримання категорій
-    fetch("http://hth-backend-tks7.onrender.com/api/router/categories/")
+    fetch("https://hth-backend-tks7.onrender.com/api/router/categories/")
       .then((response) => response.json())
       .then((data) => setCategories(data))
       .catch((error) => console.log("Помилка отримання категорій:", error));

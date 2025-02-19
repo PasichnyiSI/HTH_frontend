@@ -137,7 +137,7 @@ import { styled } from '@mui/material/styles';
   
       console.log({ email, username, password, password2 }); // Перевіримо, що дані є
   
-      const response = await fetch("http://hth-backend-tks7.onrender.com/users/register/", {
+      const response = await fetch("https://hth-backend-tks7.onrender.com/users/register/", {
           method: "POST",
           headers: {
               "Content-Type": "application/json",
