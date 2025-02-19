@@ -22,6 +22,7 @@
     "react-scripts": "^5.0.1",
     "react-slick": "^0.30.3",
     "react-stars": "^2.2.5",
+    "serve": "^14.2.4",
     "slick-carousel": "^1.8.1",
     "styled-components": "^6.1.14",
     "sweetalert2": "^11.15.10",
@@ -30,7 +31,7 @@
     "webpack-dev-server": "^5.2.0"
   },
   "scripts": {
-    "start": "concurrently \"npm run react\" \"npm run django\"",
+    "start": "serve -s build",
     "build": "react-scripts build",
     "react": "react-scripts start",
     "django": "cd ../HTH/ && python manage.py runserver"
