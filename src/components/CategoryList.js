@@ -15,7 +15,7 @@ function CategoryList({ categories }) {
             {category.products && category.products.length > 0 ? (
               category.products.map((product) => (
                 <li key={product.id}>
-                  <Link to={`/product/${product.slug}`}>{product.name}</Link>
+                  <Link to={`/products/${product.slug}`}>{product.name}</Link>
                 </li>
               ))
             ) : (

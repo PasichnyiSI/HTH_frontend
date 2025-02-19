@@ -138,7 +138,10 @@ const CheckoutPage = () => {
         }
     
         try {
-          const orderResponse = await axiosInstance.post('/orders/orders/', {
+          const orderResponse = await axiosInstance.post('/orders/orders/', checkoutPayload, {
+            headers: {
+              'Content-Type': 'application/json', // Додаємо правильний заголовок
+            },
             user: userId,
             items: cart.items.map(item => ({
               product_id: item.product.id,
@@ -155,7 +158,7 @@ const CheckoutPage = () => {
               ...checkoutPayload,
               order: orderId
             });
-    
+            
             await clearCart(axiosInstance);
             navigate('/order-success');
           } else {

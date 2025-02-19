@@ -3,6 +3,7 @@ import useAxios from "../utils/useAxios";
 import AuthContext from "../context/AuthContext";
 import { Outlet } from 'react-router-dom';
 import CategoryList from './CategoryList';
+import Breadcrumbs from "../components/Breadcrumbs";
 import HomeIcon from '@mui/icons-material/Home';
 import LocalGroceryStoreIcon from '@mui/icons-material/LocalGroceryStore';
 import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
@@ -14,6 +15,7 @@ import InfoIcon from '@mui/icons-material/Info';
 import UndoIcon from '@mui/icons-material/Undo';
 import LoginIcon from '@mui/icons-material/Login';
 import LogoutIcon from '@mui/icons-material/Logout';
+
 
 const Base = ({ categories, categoryProduct }) => {
 
@@ -114,6 +116,9 @@ const Base = ({ categories, categoryProduct }) => {
             </div>
         </div>
     </header>
+    <div className='breadcrumbs-container'>
+        <Breadcrumbs />
+    </div>
     <div className="side_menu">
         <div className="container_menu">
             <div className="header-container-side-menu">

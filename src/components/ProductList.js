@@ -81,7 +81,7 @@ function ProductList({ products }) {
           </div>
         </div>
       </div>
-      <Link to={`/product/${product.slug}`} className="product-link">
+      <Link to={`/products/${product.slug}`} className="product-link">
         <button className="view-more-btn">
           <span> Детальніше.. </span>
         </button>

@@ -82,7 +82,7 @@ function App() {
             <Route index element={<HomePage popularProducts={popularProducts} noveltiesProducts={noveltiesProducts} bestProducts={bestProducts} />} />
             <Route path="/cart" element={<Cart/>} />
             <Route path="/products" element={<Shop products={products} />} />
-            <Route path="/product/:slug" element={<ProductPage/>} />
+            <Route path="/products/:slug" element={<ProductPage/>} />
             <Route path="/login" element={<SignIn/>} />
             <Route path="/register" element={<SignUp/>} />
             <Route path="/dashboard" element={<PrivateRoute><Dashboard/></PrivateRoute>} />
