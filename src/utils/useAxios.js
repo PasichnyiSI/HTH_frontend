@@ -5,10 +5,10 @@ import { useContext } from "react";
 import AuthContext from "../context/AuthContext";
 
 // Основний базовий URL для всіх запитів
-const baseURL = "http://127.0.0.1:8000/";
+const baseURL = "http://hth-backend-tks7.onrender.com/";
 
 // Зробимо запит на авторизацію (для рефреша токенів) з іншою URL
-const usersBaseURL = "http://127.0.0.1:8000/users/";
+const usersBaseURL = "http://hth-backend-tks7.onrender.com/users/";
 
 const useAxios = () => {
   const { authTokens, setUser, setAuthTokens } = useContext(AuthContext);

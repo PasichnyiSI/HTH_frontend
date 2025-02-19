@@ -1,6 +1,6 @@
 export const fetchWishlist = async (axiosInstance, setWishlist, setError, setLoading) => {
     try {
-        const response = await axiosInstance.get("http://127.0.0.1:8000/wishlist/wishlist/");
+        const response = await axiosInstance.get("http://hth-backend-tks7.onrender.com/wishlist/wishlist/");
         console.log(response.data);
         if (response.data.length > 0 && response.data[0].items) {
             setWishlist(response.data[0]);
@@ -44,7 +44,7 @@ export const removeItem = async (axiosInstance, productId = null) => {
 
 export const addToWishlist = async (axiosInstance, product, discountedPrice) => {
     try {
-      const response = await axiosInstance.post("http://127.0.0.1:8000/wishlist/wishlist/add_item/", {
+      const response = await axiosInstance.post("http://hth-backend-tks7.onrender.com/wishlist/wishlist/add_item/", {
         product_id: product.id,
         price: Math.round(discountedPrice), // Додаємо ціну зі знижкою
       });

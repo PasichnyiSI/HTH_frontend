@@ -13,7 +13,7 @@ const Shop = () => {
 
   // Завантаження категорій та розмірів
   useEffect(() => {
-    fetch("http://localhost:8000/api/router/categories/")
+    fetch("http://hth-backend-tks7.onrender.com/api/router/categories/")
       .then((res) => res.json())
       .then((data) => {
         setCategories(data); // Зберігаємо категорії у стан
@@ -31,7 +31,7 @@ const Shop = () => {
 
   // Завантаження товарів відповідно до фільтрів
   useEffect(() => {
-    let url = "http://localhost:8000/api/router/products/?";
+    let url = "http://hth-backend-tks7.onrender.com/api/router/products/?";
 
     // Додавання фільтрів до URL
     if (filters.category) url += `category=${filters.category}&`;

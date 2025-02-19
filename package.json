@@ -30,6 +30,7 @@
   },
   "scripts": {
     "start": "concurrently \"npm run react\" \"npm run django\"",
+    "build": "react-scripts build",
     "react": "react-scripts start",
     "django": "cd ../HTH/ && python manage.py runserver"
   },
