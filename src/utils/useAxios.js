@@ -3,18 +3,9 @@ import { jwtDecode } from "jwt-decode";
 import dayjs from "dayjs";
 import { useContext } from "react";
 import AuthContext from "../context/AuthContext";
+import baseURL from "../config";
 
-// Основний базовий URL для всіх запитів
-const baseURL =
-  process.env.NODE_ENV === "production"
-    ? "https://hth-backend-tks7.onrender.com/"
-    : "http://127.0.0.1:8000/";
-
-// Базовий URL для авторизації (рефреш токену)
-const usersBaseURL =
-  process.env.NODE_ENV === "production"
-    ? "https://hth-backend-tks7.onrender.com/users/"
-    : "http://127.0.0.1:8000/users/";
+const usersBaseURL = `${baseURL}users/`;
 
 const useAxios = () => {
   const { authTokens, setUser, setAuthTokens } = useContext(AuthContext);
@@ -43,7 +34,7 @@ const useAxios = () => {
       setUser(jwtDecode(response.data.access));
       localStorage.setItem("authTokens", JSON.stringify(response.data));
 
-      // **ОНОВЛЕННЯ req.headers НЕ ПРАЦЮЄ, ПОТРІБНО ПОВЕРНУТИ НОВИЙ req!**
+      // Повертаємо оновлений запит з новим токеном
       return {
         ...req,
         headers: {
@@ -53,7 +44,7 @@ const useAxios = () => {
       };
     } catch (error) {
       console.error("Refresh token failed", error);
-      return req; // Повертаємо старий req, якщо щось пішло не так
+      return req;
     }
   });
 

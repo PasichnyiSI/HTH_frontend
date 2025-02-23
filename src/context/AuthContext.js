@@ -1,8 +1,9 @@
 import {createContext, useState, useEffect} from "react";
 import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
-const swal = require('sweetalert2')
+import baseURL from "../config";
 
+const swal = require('sweetalert2')
 const AuthContext = createContext();
 
 export default AuthContext
@@ -27,7 +28,7 @@ export const AuthProvider = ({ children }) => {
     const navigate = useNavigate();
 
     const loginUser = async (email, password) => {
-        const response = await fetch("https://hth-backend-tks7.onrender.com/users/token/", {
+        const response = await fetch(`${baseURL}users/token/`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -75,7 +76,7 @@ export const AuthProvider = ({ children }) => {
     
 
     const registerUser = async (email, username, password, password2) => {
-        const response = await fetch("https://hth-backend-tks7.onrender.com/users/register/", {
+        const response = await fetch(`${baseURL}users/register/`, {
             method: "POST",
             headers: {
                 "Content-Type":"application/json"

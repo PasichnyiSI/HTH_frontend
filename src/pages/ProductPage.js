@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import ProductDetail from "../components/ProductDetail";
 import useAxios from "../utils/useAxios";
 import { TextField, Button, Rating, Box, Typography, Card, CardContent, Avatar } from "@mui/material";
+import baseURL from "../config";
 
 function ProductPage() {
   const { slug } = useParams();
@@ -26,7 +27,7 @@ function ProductPage() {
 
     const fetchProduct = async () => {
       try {
-        const response = await fetch(`https://hth-backend-tks7.onrender.com/api/router/products/${slug}/`);
+        const response = await fetch(`${baseURL}api/router/products/${slug}/`);
         if (!response.ok) throw new Error("Failed to fetch product");
         const data = await response.json();
         setProduct(data);
@@ -72,7 +73,7 @@ function ProductPage() {
 
     try {
       await axiosInstance.post(
-        `https://hth-backend-tks7.onrender.com/rating/ratings/${slug}/rate/`,
+        `${baseURL}rating/ratings/${slug}/rate/`,
         formData,
         { headers: { "Content-Type": "multipart/form-data" } }
       );

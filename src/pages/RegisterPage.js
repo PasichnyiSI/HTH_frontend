@@ -16,6 +16,7 @@ import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import MuiCard from '@mui/material/Card';
 import { styled } from '@mui/material/styles';
+import baseURL from "../config";
 // import AppTheme from '../shared-theme/AppTheme';
 // import ColorModeSelect from '../shared-theme/ColorModeSelect';
 // import { GoogleIcon, FacebookIcon, SitemarkIcon } from './components/CustomIcons';
@@ -137,7 +138,7 @@ import { styled } from '@mui/material/styles';
   
       console.log({ email, username, password, password2 }); // Перевіримо, що дані є
   
-      const response = await fetch("https://hth-backend-tks7.onrender.com/users/register/", {
+      const response = await fetch(`${baseURL}users/register/`, {
           method: "POST",
           headers: {
               "Content-Type": "application/json",
