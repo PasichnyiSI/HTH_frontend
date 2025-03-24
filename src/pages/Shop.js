@@ -12,12 +12,12 @@ const Shop = () => {
     maxPrice: "",
   });
 
-  // Завантаження категорій та розмірів
+  // Завантаження категорій
   useEffect(() => {
     fetch(`${baseURL}api/router/categories/`)
       .then((res) => res.json())
       .then((data) => {
-        setCategories(data); // Зберігаємо категорії у стан
+        setCategories(data);
       })
       .catch((err) => console.error("Помилка отримання категорій:", err));
   }, []);
@@ -30,19 +30,16 @@ const Shop = () => {
     });
   };
 
-  // Завантаження товарів відповідно до фільтрів
-  useEffect(() => {
-    let url = `${baseURL}api/router/products/?`;
-
-    // Додавання фільтрів до URL
+  // Функція для завантаження товарів
+  const fetchProducts = () => {
+    let url = `${baseURL}api/router/products/?timestamp=${new Date().getTime()}&`;
+  
     if (filters.category) url += `category=${filters.category}&`;
     if (filters.minPrice) url += `minPrice=${filters.minPrice}&`;
     if (filters.maxPrice) url += `maxPrice=${filters.maxPrice}&`;
-
-    // Лог для перевірки правильності сформованого запиту
+  
     console.log("Fetching products with URL:", url);
-
-    // Виконання запиту
+  
     fetch(url)
       .then((res) => res.json())
       .then((data) => {
@@ -50,7 +47,20 @@ const Shop = () => {
         setProducts(data);
       })
       .catch((err) => console.error("Error fetching products:", err));
+  };
+
+  // Виклик запиту при зміні фільтрів
+  useEffect(() => {
+    fetchProducts();
   }, [filters]);
+
+  // Оновлення товарів кожні 30 секунд (або при відкритті сторінки)
+  useEffect(() => {
+    fetchProducts(); // Завантаження при першому відкритті сторінки
+    const interval = setInterval(fetchProducts, 30000); // Оновлення кожні 30 секунд
+
+    return () => clearInterval(interval); // Очищення інтервалу при розмонтуванні
+  }, []);
 
   return (
     <Container maxWidth="lg">
