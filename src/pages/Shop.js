@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import ProductList from "../components/ProductList";
 import { Container, Typography, Grid, FormControl, InputLabel, Select, MenuItem, TextField } from "@mui/material";
+import baseURL from "../config";
 
 const Shop = () => {
   const [products, setProducts] = useState([]);
@@ -13,7 +14,7 @@ const Shop = () => {
 
   // Завантаження категорій та розмірів
   useEffect(() => {
-    fetch("https://hth-backend-tks7.onrender.com/api/router/categories/")
+    fetch(`${baseURL}api/router/categories/`)
       .then((res) => res.json())
       .then((data) => {
         setCategories(data); // Зберігаємо категорії у стан
@@ -31,7 +32,7 @@ const Shop = () => {
 
   // Завантаження товарів відповідно до фільтрів
   useEffect(() => {
-    let url = "https://hth-backend-tks7.onrender.com/api/router/products/?";
+    let url = `${baseURL}api/router/products/?`;
 
     // Додавання фільтрів до URL
     if (filters.category) url += `category=${filters.category}&`;

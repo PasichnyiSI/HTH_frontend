@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import ReactStars from "react-stars";
 import axios from "axios";
+import baseURL from "../config";
 
 const ProductRating = ({ productSlug }) => {
   const [averageRating, setAverageRating] = useState(0);
@@ -10,7 +11,7 @@ const ProductRating = ({ productSlug }) => {
     const fetchRating = async () => {
       try {
         // Зміни URL на hth-backend-tks7.onrender.com
-        const response = await axios.get(`https://hth-backend-tks7.onrender.com/api/router/products/${productSlug}/`);
+        const response = await axios.get(`${baseURL}api/router/products/${productSlug}/`);
         console.log(response.data);  // Логування відповіді
         setAverageRating(parseFloat(response.data.average_rating) || 0);
         setRatingCount(response.data.rating_count || 0);

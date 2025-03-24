@@ -1,6 +1,8 @@
+import baseURL from "../config";
+
 export const fetchCart = async (axiosInstance, setCart, setLoading, setError) => {
     try {
-        const response = await axiosInstance.get("https://hth-backend-tks7.onrender.com/cart/cart/");
+        const response = await axiosInstance.get(`${baseURL}cart/cart/`);
         console.log(response.data);
         if (response.data.length > 0 && response.data[0].items) {
             setCart(response.data[0]);
@@ -37,7 +39,7 @@ export const removeItem = async (axiosInstance, productId, sizeId = null) => {
 
 export const addToCart = async (axiosInstance, product, selectedSize, quantity, discountedPrice) => {
     try {
-      const response = await axiosInstance.post("https://hth-backend-tks7.onrender.com/cart/cart/add_item/", {
+      const response = await axiosInstance.post(`${baseURL}cart/cart/add_item/`, {
         product_id: product.id,
         size_id: selectedSize.id,
         size_name: selectedSize.name,
