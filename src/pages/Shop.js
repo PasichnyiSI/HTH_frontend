@@ -12,12 +12,12 @@ const Shop = () => {
     maxPrice: "",
   });
 
-  // Завантаження категорій
+  // Завантаження категорій та розмірів
   useEffect(() => {
     fetch(`${baseURL}api/router/categories/`)
       .then((res) => res.json())
       .then((data) => {
-        setCategories(data);
+        setCategories(data); // Зберігаємо категорії у стан
       })
       .catch((err) => console.error("Помилка отримання категорій:", err));
   }, []);
@@ -30,9 +30,8 @@ const Shop = () => {
     });
   };
 
-  // Функція для завантаження товарів
-  const fetchProducts = () => {
-    let url = `${baseURL}api/router/products/?timestamp=${new Date().getTime()}&`;
+  useEffect(() => {
+    let url = `${baseURL}api/router/products/?timestamp=${new Date().getTime()}&`; // Додаємо timestamp
   
     if (filters.category) url += `category=${filters.category}&`;
     if (filters.minPrice) url += `minPrice=${filters.minPrice}&`;
@@ -47,24 +46,21 @@ const Shop = () => {
         setProducts(data);
       })
       .catch((err) => console.error("Error fetching products:", err));
-  };
-
-  // Виклик запиту при зміні фільтрів
-  useEffect(() => {
-    fetchProducts();
   }, [filters]);
+  
 
-  // Оновлення товарів кожні 30 секунд (або при відкритті сторінки)
+  // Завантаження товарів без фільтрів при першому рендері
   useEffect(() => {
-    fetchProducts(); // Завантаження при першому відкритті сторінки
-    const interval = setInterval(fetchProducts, 30000); // Оновлення кожні 30 секунд
-
-    return () => clearInterval(interval); // Очищення інтервалу при розмонтуванні
-  }, []);
+    if (!filters.category && !filters.minPrice && !filters.maxPrice) {
+      setFilters({ category: "", minPrice: "", maxPrice: "" }); // Очистити фільтри при першому завантаженні
+    }
+  }, []); // Запуск лише один раз при завантаженні сторінки
 
   return (
     <Container maxWidth="lg">
-      <Typography variant="h4" sx={{ mt: 4, mb: 2, textAlign: "center" }}>Всі товари</Typography>
+      <Typography variant="h4" sx={{ mt: 4, mb: 2, textAlign: "center" }}>
+        Всі товари
+      </Typography>
 
       {/* Фільтри */}
       <Grid container spacing={2} sx={{ mb: 4 }}>
